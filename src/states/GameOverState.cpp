@@ -2,7 +2,9 @@
 #include "MainMenuState.h"
 #include "GameplayState.h"
 #include "GameEngine.h"
+#include "CommandCodes.h"
 #include <QDebug>
+#include <string>
 
 void GameOverState::enterState(GameEngine* gameEngine) {
     qDebug() << "GameOverState: Entering Game Over State";
@@ -15,11 +17,12 @@ void GameOverState::exitState(GameEngine* gameEngine) {
 }
 
 void GameOverState::handleInput(GameEngine* gameEngine, const std::string& input) {
-    if (input == "-5") {
+    int command = std::stoi(input);
+    if (command == static_cast<int>(CommandCode::RestartGame)) {
         qDebug() << "GameOverState: Restarting Game";
         gameEngine->restartGame();
     }
-    else if (input == "-6") {
+    else if (command == static_cast<int>(CommandCode::ReturnToMainMenu)) {
         qDebug() << "GameOverState: Returning to Main Menu";
         gameEngine->changeState(std::make_unique<MainMenuState>());
     }

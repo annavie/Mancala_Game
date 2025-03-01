@@ -2,12 +2,13 @@
 #define UI_H
 
 #include <QMainWindow>
-#include <QLabel>
-#include <QPushButton>
-#include <QGridLayout>
+#include <string>
 #include <vector>
-#include"Board.h"
+
 class GameEngine;
+class QLabel;
+class QPushButton;
+class QGridLayout;
 
 class UI : public QMainWindow {
     Q_OBJECT
@@ -20,13 +21,16 @@ public:
     void displaySettings();
     void displayGameplay();
     void displayGameOver(int player1Score, int player2Score);
-    void renderBoard(const Board& board);
+    
+    void renderBoard(const class Board& board);
+    
     void showInGameMenu();
-
 
 signals:
     void pitClicked(int pitIndex);
+    
     void saveSettings(const std::string& player1Name, const std::string& player2Name);
+    
     void backToMainMenu();
 
 private:
@@ -38,19 +42,20 @@ private:
     QPushButton* exitButton;
     QPushButton* restartButton;
     QPushButton* mainMenuButton;
-
     QLabel* player1StoreLabel;
     QLabel* player2StoreLabel;
     QLabel* scoreLabel;
-
     QGridLayout* pitsLayout;
     std::vector<QPushButton*> pitButtons;
 
-    void clearLayout();
     void setupMainMenu();
     void setupSettings();
     void setupGameplay();
     void setupGameOver();
+    
+    QPushButton* createPitButton(const QString& text, const QString& styleSheet);
+    
+    void clearLayout();
 };
 
 #endif // UI_H

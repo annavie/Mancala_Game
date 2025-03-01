@@ -1,7 +1,9 @@
 #include "SettingsState.h"
 #include "GameEngine.h"
 #include "MainMenuState.h"
+#include "CommandCodes.h"
 #include <QDebug>
+#include <string>
 
 void SettingsState::enterState(GameEngine* gameEngine) {
     qDebug() << "SettingsState: Entering Settings";
@@ -13,10 +15,11 @@ void SettingsState::exitState(GameEngine* gameEngine) {
 }
 
 void SettingsState::handleInput(GameEngine* gameEngine, const std::string& input) {
-    if (input == "-2") {
+    int command = std::stoi(input);
+    if (command == static_cast<int>(CommandCode::Settings)) {
         qDebug() << "SettingsState: Saving settings";
     }
-    else if (input == "-4") {
+    else if (command == static_cast<int>(CommandCode::ReturnToMainMenu)) {
         qDebug() << "SettingsState: Returning to Main Menu";
         gameEngine->changeState(std::make_unique<MainMenuState>());
     }

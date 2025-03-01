@@ -2,7 +2,9 @@
 #include "GameplayState.h"
 #include "MainMenuState.h"
 #include "GameEngine.h"
+#include "CommandCodes.h"
 #include <QDebug>
+#include <string>
 
 void PauseState::enterState(GameEngine* gameEngine) {
     qDebug() << "PauseState: Entering Pause State";
@@ -14,21 +16,20 @@ void PauseState::exitState(GameEngine* gameEngine) {
 }
 
 void PauseState::handleInput(GameEngine* gameEngine, const std::string& input) {
-    if (input == "-5") {
+    int command = std::stoi(input);
+    if (command == static_cast<int>(CommandCode::RestartGame)) {
         qDebug() << "PauseState: Restarting game";
-
         gameEngine->restartGame();
-
-    } else if (input == "-4") {
+    }
+    else if (command == static_cast<int>(CommandCode::ReturnToMainMenu)) {
         qDebug() << "PauseState: Returning to Main Menu";
-
         gameEngine->returnToMainMenu();
-
-    } else if (input == "-3") {
+    }
+    else if (command == static_cast<int>(CommandCode::ExitGame)) {
         qDebug() << "PauseState: Exiting game";
         gameEngine->exitGame();
-
-    } else {
+    }
+    else {
         qDebug() << "PauseState: Unknown input -" << QString::fromStdString(input);
     }
 }

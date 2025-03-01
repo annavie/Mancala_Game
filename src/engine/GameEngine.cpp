@@ -23,18 +23,15 @@ GameEngine::GameEngine(QObject* parent)
 
     ui->show();
 
-    // Initialize players
     players.emplace_back(std::make_unique<Player>(settings.playerNames[0], 1, nullptr, false));
     players.emplace_back(std::make_unique<Player>(settings.playerNames[1], 2, std::make_unique<AIAlgorithmStrategy>(), true));
 
     qDebug() << "Players initialized";
 
-    // Connect UI signals to GameEngine slots
     connect(ui.get(), &UI::pitClicked, this, &GameEngine::onPitClicked);
     connect(ui.get(), &UI::backToMainMenu, this, &GameEngine::onBackToMainMenu);
     connect(ui.get(), &UI::saveSettings, this, &GameEngine::onSaveSettings);
 
-    // Connect signals for updating the UI
     connect(this, &GameEngine::updateBoard, ui.get(), &UI::renderBoard);
     connect(this, &GameEngine::showMainMenu, ui.get(), &UI::displayMainMenu);
     connect(this, &GameEngine::showSettings, ui.get(), &UI::displaySettings);
@@ -43,7 +40,6 @@ GameEngine::GameEngine(QObject* parent)
 
     qDebug() << "Signals and slots connected";
 
-    // Start with the main menu
     changeState(std::make_unique<MainMenuState>());
 }
 
@@ -71,9 +67,9 @@ void GameEngine::restartGame() {
     qDebug() << "GameEngine: Restarting game";
 
     board.resetBoard();
-    scoreTracker = ScoreTracker(); // Reinitialize score tracker
+    scoreTracker = ScoreTracker(); 
 
-    currentPlayerIndex = 0; // Start with Player 1
+    currentPlayerIndex = 0;
     isRunning = true;
 
     emit updateBoard(board);
@@ -87,7 +83,6 @@ void GameEngine::returnToMainMenu() {
     currentPlayerIndex = 0;
     isRunning = false;
 
-    // Reset scores by reinitializing ScoreTracker
     scoreTracker = ScoreTracker();
 
     changeState(std::make_unique<MainMenuState>());
