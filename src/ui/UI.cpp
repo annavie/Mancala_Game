@@ -1,21 +1,23 @@
-#include "UI.h"
-#include "GameEngine.h"
-#include "MainMenuState.h"
-#include "SettingsState.h"
-#include "GameplayState.h"
-#include "GameOverState.h"
-#include "Constants.h"      
-#include "CommandCodes.h"   
+#include "../../include/ui/UI.h"
+#include "../../include/engine/GameEngine.h"
+#include "../../include/states/MainMenuState.h"
+#include "../../include/states/SettingsState.h"
+#include "../../include/states/GameplayState.h"
+#include "../../include/states/GameOverState.h"
+#include "../../include/ui/Constants.h"
+#include "../../include/states/CommandCodes.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QDebug>
 #include <QLineEdit>
-
+#include <QLabel>
+#include <QPushButton>
+#include <iostream>
 
 UI::UI(GameEngine* gameEngine, QWidget* parent)
-    : QMainWindow(parent), mediator(gameEngine)
+    : QMainWindow(parent), mediator(gameEngine), titleLabel(nullptr)
 {
     qDebug() << "UI initialized";
     setupMainMenu();
@@ -30,10 +32,18 @@ QPushButton* UI::createPitButton(const QString& text, const QString& styleSheet)
     return button;
 }
 
+void UI::clearLayout() {
+    if (centralWidget()) {
+        centralWidget()->deleteLater();
+    }
+}
 
 void UI::setupMainMenu() {
     clearLayout();
 
+    if (!titleLabel) {
+        titleLabel = new QLabel("Mancala Game", this);
+    }
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setStyleSheet(QString("font-size: %1px;").arg(Constants::kTitleFontSize));
 
@@ -62,7 +72,6 @@ void UI::setupMainMenu() {
     container->setLayout(layout);
     setCentralWidget(container);
 }
-
 
 void UI::setupSettings() {
     clearLayout();
@@ -123,17 +132,17 @@ void UI::setupGameplay() {
             "QPushButton {"
             "   border: 2px solid black;"
             "   border-radius: " + QString::number(Constants::kPitBorderRadius) + "px;"
-            "   background-color: white;"
-            "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
-            "   color: black;"
-            "}"
-            "QPushButton:enabled {"
-            "   background-color: lightgreen;"
-            "}"
-            "QPushButton:disabled {"
-            "   background-color: lightgray;"
-            "   color: black;"
-            "}";
+                                                             "   background-color: white;"
+                                                             "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
+                                                         "   color: black;"
+                                                         "}"
+                                                         "QPushButton:enabled {"
+                                                         "   background-color: lightgreen;"
+                                                         "}"
+                                                         "QPushButton:disabled {"
+                                                         "   background-color: lightgray;"
+                                                         "   color: black;"
+                                                         "}";
         pitButtons[i] = createPitButton("4", style);
         int column = (Constants::kTotalPits - i);
         connect(pitButtons[i], &QPushButton::clicked, this, [this, i]() {
@@ -147,14 +156,14 @@ void UI::setupGameplay() {
             "QPushButton {"
             "   border: 2px solid gray;"
             "   border-radius: " + QString::number(Constants::kPitBorderRadius) + "px;"
-            "   background-color: white;"
-            "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
-            "   color: black;"
-            "}"
-            "QPushButton:disabled {"
-            "   background-color: lightgray;"
-            "   color: black;"
-            "}";
+                                                             "   background-color: white;"
+                                                             "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
+                                                         "   color: black;"
+                                                         "}"
+                                                         "QPushButton:disabled {"
+                                                         "   background-color: lightgray;"
+                                                         "   color: black;"
+                                                         "}";
         pitButtons[i] = createPitButton("4", style);
         connect(pitButtons[i], &QPushButton::clicked, this, [this, i]() {
             emit pitClicked(i);
@@ -166,14 +175,14 @@ void UI::setupGameplay() {
     player2StoreLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     player2StoreLabel->setAlignment(Qt::AlignCenter);
     player2StoreLabel->setStyleSheet(QString("font-size: %1px; border: 1px solid black;")
-                                     .arg(Constants::kStoreFontSize));
+                                         .arg(Constants::kStoreFontSize));
     pitsLayout->addWidget(player2StoreLabel, 1, Constants::kPlayer2StoreColumn);
 
     player1StoreLabel = new QLabel("Store: 0", this);
     player1StoreLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     player1StoreLabel->setAlignment(Qt::AlignCenter);
     player1StoreLabel->setStyleSheet(QString("font-size: %1px; border: 1px solid black;")
-                                     .arg(Constants::kStoreFontSize));
+                                         .arg(Constants::kStoreFontSize));
     pitsLayout->addWidget(player1StoreLabel, 1, Constants::kPlayer1StoreColumn);
 
     boardLayout->addLayout(pitsLayout);
@@ -190,7 +199,7 @@ void UI::setupGameplay() {
         "QPushButton:hover {"
         "   color: darkgreen;"
         "}"
-    );
+        );
     connect(menuButton, &QPushButton::clicked, this, [this]() {
         emit pitClicked(static_cast<int>(CommandCode::Pause));
     });
@@ -207,7 +216,6 @@ void UI::setupGameplay() {
     setCentralWidget(container);
 }
 
-
 void UI::showInGameMenu() {
     QWidget* overlay = new QWidget(this);
     overlay->setStyleSheet("background-color: rgba(0, 0, 0, 150);");
@@ -223,7 +231,7 @@ void UI::showInGameMenu() {
         "   padding: 20px;"
         "   box-shadow: 5px 5px 15px rgba(0, 0, 0, 100);"
         "}"
-    );
+        );
 
     QVBoxLayout* menuLayout = new QVBoxLayout(menuWidget);
 
@@ -241,7 +249,7 @@ void UI::showInGameMenu() {
         "QPushButton:hover {"
         "   background-color: darkgreen; color: white;"
         "}"
-    );
+        );
 
     QPushButton* mainMenuButton = new QPushButton("Main Menu", menuWidget);
     mainMenuButton->setStyleSheet(
@@ -253,7 +261,7 @@ void UI::showInGameMenu() {
         "QPushButton:hover {"
         "   background-color: darkblue; color: white;"
         "}"
-    );
+        );
 
     QPushButton* exitButton = new QPushButton("Exit Game", menuWidget);
     exitButton->setStyleSheet(
@@ -265,7 +273,7 @@ void UI::showInGameMenu() {
         "QPushButton:hover {"
         "   background-color: darkred; color: white;"
         "}"
-    );
+        );
 
     connect(restartButton, &QPushButton::clicked, this, [this, overlay, menuWidget]() {
         overlay->close();
@@ -327,19 +335,6 @@ void UI::setupGameOver() {
     setCentralWidget(container);
 }
 
-
-void UI::clearLayout() {
-    QLayout* layout = centralWidget() ? centralWidget()->layout() : nullptr;
-    if (!layout) return;
-    while (QLayoutItem* item = layout->takeAt(0)) {
-        if (QWidget* widget = item->widget()) {
-            widget->deleteLater();
-        }
-        delete item;
-    }
-    delete layout;
-}
-
 void UI::renderBoard(const Board& board) {
     Player* currentPlayer = mediator->getCurrentPlayer();
     int currentPlayerNumber = currentPlayer->getPlayerNumber();
@@ -350,7 +345,7 @@ void UI::renderBoard(const Board& board) {
         int stones = board.getPit(i).getStones();
         pitButtons[i]->setText(QString::number(stones));
 
-        bool isPlayer1Pit = (i < Constants::kPitsPerPlayer); // pits 0–(kPitsPerPlayer - 1) for Player 1
+        bool isPlayer1Pit = (i < Constants::kPitsPerPlayer);
         bool isCurrentPlayerPit = (currentPlayerNumber == 1 && isPlayer1Pit) ||
                                   (currentPlayerNumber == 2 && !isPlayer1Pit);
 
@@ -362,25 +357,25 @@ void UI::renderBoard(const Board& board) {
                 "QPushButton {"
                 "   border: 2px solid black;"
                 "   border-radius: " + QString::number(Constants::kPitBorderRadius) + "px;"
-                "   background-color: lightgreen;"
-                "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
-                "   color: black;"
-                "}"
-            );
+                                                                 "   background-color: lightgreen;"
+                                                                 "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
+                                                             "   color: black;"
+                                                             "}"
+                );
         } else {
             pitButtons[i]->setStyleSheet(
                 "QPushButton {"
                 "   border: 2px solid black;"
                 "   border-radius: " + QString::number(Constants::kPitBorderRadius) + "px;"
-                "   background-color: lightgray;"
-                "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
-                "   color: black;"
-                "}"
-                "QPushButton:disabled {"
-                "   color: black;"
-                "   border: 2px dashed gray;"
-                "}"
-            );
+                                                                 "   background-color: lightgray;"
+                                                                 "   font-size: " + QString::number(Constants::kPitFontSize) + "px;"
+                                                             "   color: black;"
+                                                             "}"
+                                                             "QPushButton:disabled {"
+                                                             "   color: black;"
+                                                             "   border: 2px dashed gray;"
+                                                             "}"
+                );
         }
 
         qDebug() << "Pit" << i
@@ -423,5 +418,5 @@ void UI::displayGameOver(int player1Score, int player2Score) {
     scoreLabel->setText(QString::fromStdString(
         player1Name + ": " + std::to_string(player1Score) + "   " +
         player2Name + ": " + std::to_string(player2Score) + "\n" + winner
-    ));
+        ));
 }

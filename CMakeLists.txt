@@ -13,65 +13,71 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    src/main.cpp
+    src/mainwindow.cpp
+    src/mainwindow.h
+
+    src/mainwindow.ui
+
+    include/core/Board.h
+    src/core/Board.cpp
+
+    include/core/Player.h
+    src/core/Player.cpp
+
+    include/core/ScoreTracker.h
+
+    include/strategy/PlayerStrategy.h
+
+    include/strategy/HumanInputStrategy.h
+
+    include/engine/GameEngine.h
+    src/engine/GameEngine.cpp
+
+    include/ui/UI.h
+    src/ui/UI.cpp
+
+    include/states/GameStateManager.h
+    src/states/GameStateManager.cpp
+
+    include/states/State.h
+
+    include/states/MainMenuState.h
+    src/states/MainMenuState.cpp
+
+    include/states/SettingsState.h
+    src/states/SettingsState.cpp
+
+    include/states/GameplayState.h
+    src/states/GameplayState.cpp
+
+    include/states/PauseState.h
+    src/states/PauseState.cpp
+
+    include/states/GameOverState.h
+    src/states/GameOverState.cpp
+
+    include/strategy/AIAlgorithmStrategy.h
+
+    include/core/Settings.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(ga
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        Pit.h Pit.cpp
-
-
-
-        Board.h Board.cpp
-        Player.h Player.cpp
-        ScoreTracker.h ScoreTracker.cpp
-        PlayerStrategy.h PlayerStrategy.cpp
-        HumanInputStrategy.h HumanInputStrategy.cpp
-
-        GameEngine.h GameEngine.cpp
-        UI.h UI.cpp
-        GameStateManager.h GameStateManager.cpp
-        State.h
-        MainMenuState.h MainMenuState.cpp
-        SettingsState.h SettingsState.cpp
-        GameplayState.h GameplayState.cpp
-        PauseState.h PauseState.cpp
-        GameOverState.h GameOverState.cpp
-        AIAlgorithmStrategy.h AIAlgorithmStrategy.cpp
-        Settings.h Settings.cpp
-        src/core/Player.cpp
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET ga APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+    qt_add_executable(ga MANUAL_FINALIZATION ${PROJECT_SOURCES})
 else()
     if(ANDROID)
-        add_library(ga SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+        add_library(ga SHARED ${PROJECT_SOURCES})
     else()
-        add_executable(ga
-            ${PROJECT_SOURCES}
-        )
+        add_executable(ga ${PROJECT_SOURCES})
     endif()
 endif()
 
 target_link_libraries(ga PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ga)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ga)
 endif()
+
 set_target_properties(ga PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -79,6 +85,7 @@ set_target_properties(ga PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+set(CMAKE_AUTOMOC ON)
 
 include(GNUInstallDirs)
 install(TARGETS ga

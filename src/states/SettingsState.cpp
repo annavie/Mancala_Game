@@ -1,7 +1,7 @@
-#include "SettingsState.h"
-#include "GameEngine.h"
-#include "MainMenuState.h"
-#include "CommandCodes.h"
+#include "../../include/states/SettingsState.h"
+#include "../../include/engine/GameEngine.h"
+#include "../../include/states/MainMenuState.h"
+#include "../../include/states/CommandCodes.h"   
 #include <QDebug>
 #include <string>
 

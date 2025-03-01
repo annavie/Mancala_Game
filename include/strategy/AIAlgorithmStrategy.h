@@ -1,9 +1,9 @@
-#include "Board.h"
-#include "Player.h"
-#include "AIConstants.h"
+#include "../core/Board.h"
+#include "../core/Player.h"
+#include "AlgorithmConstants.h"
 #include <limits>
 #include <vector>
-
+#include"PlayerStrategy.h"
 class AIAlgorithmStrategy : public PlayerStrategy {
 public:
     int selectPit(Board* board, Player* player) override {

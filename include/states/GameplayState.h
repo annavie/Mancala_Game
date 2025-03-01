@@ -1,4 +1,4 @@
-// GameplayState.h
+
 #ifndef GAMEPLAYSTATE_H
 #define GAMEPLAYSTATE_H
 

@@ -1,6 +1,6 @@
-#include "Player.h"
-#include "PlayerStrategy.h"
-#include "Board.h"
+#include "../../include/core/Player.h"
+#include "../../include/strategy/PlayerStrategy.h"
+#include "../../include/core/Board.h"
 
 Player::Player(const std::string& name,
                int playerNumber,

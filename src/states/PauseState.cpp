@@ -1,8 +1,8 @@
-#include "PauseState.h"
-#include "GameplayState.h"
-#include "MainMenuState.h"
-#include "GameEngine.h"
-#include "CommandCodes.h"
+#include "../../include/states/PauseState.h"
+#include "../../include/states/GameplayState.h"
+#include "../../include/states/MainMenuState.h"
+#include "../../include/engine/GameEngine.h"
+#include "../../include/states/CommandCodes.h"
 #include <QDebug>
 #include <string>
 

@@ -1,13 +1,13 @@
-#include "GameEngine.h"
-#include "MainMenuState.h"
-#include "SettingsState.h"
-#include "GameplayState.h"
-#include "GameOverState.h"
+#include "../../include/engine/GameEngine.h"
+#include "../../include/states/MainMenuState.h"
+#include "../../include/states/SettingsState.h"
+#include "../../include/states/GameplayState.h"
+#include "../../include/states/GameOverState.h"
 #include <QTimer>
 #include <QMessageBox>
 #include <QApplication>
 #include <QDebug>
-#include "AIAlgorithmStrategy.h"
+#include "../../include/strategy/AIAlgorithmStrategy.h"
 
 GameEngine::GameEngine(QObject* parent)
     : QObject(parent),

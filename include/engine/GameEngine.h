@@ -4,12 +4,12 @@
 #include <QObject>
 #include <vector>
 #include <memory>
-#include "GameStateManager.h"
-#include "Board.h"
-#include "Player.h"
-#include "Settings.h"
-#include "ScoreTracker.h"
-#include "UI.h"
+#include "../states/GameStateManager.h"
+#include "../core/Board.h"
+#include "../core/Player.h"
+#include "../core/Settings.h"
+#include "../core/ScoreTracker.h"
+#include "../ui/UI.h"
 
 class State;
 

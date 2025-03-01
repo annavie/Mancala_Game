@@ -1,5 +1,5 @@
-#include "GameStateManager.h"
-#include "GameEngine.h"
+#include "../../include/states/GameStateManager.h"
+#include "../../include/engine/GameEngine.h"
 
 GameStateManager::GameStateManager(GameEngine* engine)
     : gameEngine(engine), currentState(nullptr) {}

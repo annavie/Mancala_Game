@@ -1,6 +1,6 @@
-#include "Board.h"
-#include "Player.h"
-#include "BoardConstants.h"
+#include "../../include/core/Board.h"
+#include "../../include/core/Player.h"
+#include "../../include/core/BoardConstants.h"
 #include <iostream>
 
 bool Board::makeMove(int pitIndex, Player* player) {
@@ -11,28 +11,28 @@ bool Board::makeMove(int pitIndex, Player* player) {
     }
     int currentIndex = pitIndex;
     while (stones > 0) {
-        currentIndex = (currentIndex + 1) % kTotalPositions;
-        if (currentIndex == kPlayer1StoreIndex && playerNumber == 2) continue;
-        if (currentIndex == kPlayer2StoreIndex && playerNumber == 1) continue;
-        if (currentIndex < kPlayablePits) {
+        currentIndex = (currentIndex + 1) % BoardConstants::kTotalPositions;
+        if (currentIndex == BoardConstants::kPlayer1StoreIndex && playerNumber == 2) continue;
+        if (currentIndex == BoardConstants::kPlayer2StoreIndex && playerNumber == 1) continue;
+        if (currentIndex < BoardConstants::kPlayablePits) {
             pits[currentIndex].addStones(1);
         }
-        else if (currentIndex == kPlayer1StoreIndex) {
+        else if (currentIndex == BoardConstants::kPlayer1StoreIndex) {
             player1Store += 1;
         }
-        else if (currentIndex == kPlayer2StoreIndex) {
+        else if (currentIndex == BoardConstants::kPlayer2StoreIndex) {
             player2Store += 1;
         }
         stones--;
     }
-    if ((playerNumber == 1 && currentIndex == kPlayer1StoreIndex) ||
-        (playerNumber == 2 && currentIndex == kPlayer2StoreIndex)) {
+    if ((playerNumber == 1 && currentIndex == BoardConstants::kPlayer1StoreIndex) ||
+        (playerNumber == 2 && currentIndex == BoardConstants::kPlayer2StoreIndex)) {
         return true;
     }
-    if (currentIndex < kPlayablePits && pits[currentIndex].getStones() == 1) {
-        if ((playerNumber == 1 && currentIndex < kPitsPerPlayer) ||
-            (playerNumber == 2 && currentIndex >= kPitsPerPlayer)) {
-            int oppositeIndex = kMaxPitIndex - currentIndex;
+    if (currentIndex < BoardConstants::kPlayablePits && pits[currentIndex].getStones() == 1) {
+        if ((playerNumber == 1 && currentIndex < BoardConstants::kPitsPerPlayer) ||
+            (playerNumber == 2 && currentIndex >= BoardConstants::kPitsPerPlayer)) {
+            int oppositeIndex = BoardConstants::kMaxPitIndex - currentIndex;
             int capturedStones = pits[oppositeIndex].removeStones();
             if (playerNumber == 1) {
                 player1Store += capturedStones + 1;
@@ -47,14 +47,14 @@ bool Board::makeMove(int pitIndex, Player* player) {
 
 bool Board::isGameOver() const {
     bool player1Empty = true;
-    for (int i = 0; i < kPitsPerPlayer; ++i) {
+    for (int i = 0; i < BoardConstants::kPitsPerPlayer; ++i) {
         if (pits[i].getStones() > 0) {
             player1Empty = false;
             break;
         }
     }
     bool player2Empty = true;
-    for (int i = kPitsPerPlayer; i < kPlayablePits; ++i) {
+    for (int i = BoardConstants::kPitsPerPlayer; i < BoardConstants::kPlayablePits; ++i) {
         if (pits[i].getStones() > 0) {
             player2Empty = false;
             break;
@@ -67,13 +67,13 @@ void Board::finalizeBoard() {
     if (isGameOver()) {
         int remainingStones = 0;
         if (player1Store == 0) {
-            for (int i = kPitsPerPlayer; i < kPlayablePits; ++i) {
+            for (int i = BoardConstants::kPitsPerPlayer; i < BoardConstants::kPlayablePits; ++i) {
                 remainingStones += pits[i].removeStones();
             }
             player2Store += remainingStones;
         }
         else {
-            for (int i = 0; i < kPitsPerPlayer; ++i) {
+            for (int i = 0; i < BoardConstants::kPitsPerPlayer; ++i) {
                 remainingStones += pits[i].removeStones();
             }
             player1Store += remainingStones;
@@ -83,11 +83,11 @@ void Board::finalizeBoard() {
 
 bool Board::isValidMove(int pitIndex, Player* player) const {
     int playerNumber = player->getPlayerNumber();
-    if (pitIndex < 0 || pitIndex >= kPlayablePits) {
+    if (pitIndex < 0 || pitIndex >= BoardConstants::kPlayablePits) {
         return false;
     }
-    if ((playerNumber == 1 && pitIndex >= kPitsPerPlayer) ||
-        (playerNumber == 2 && pitIndex < kPitsPerPlayer)) {
+    if ((playerNumber == 1 && pitIndex >= BoardConstants::kPitsPerPlayer) ||
+        (playerNumber == 2 && pitIndex < BoardConstants::kPitsPerPlayer)) {
         return false;
     }
     if (pits[pitIndex].getStones() == 0) {

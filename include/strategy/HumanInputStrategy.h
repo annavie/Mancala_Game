@@ -3,8 +3,8 @@
 
 #include "PlayerStrategy.h"
 #include <iostream>
-#include"Player.h"
-#include"Board.h"
+#include"../core/Player.h"
+#include"../core/Board.h"
 class HumanInputStrategy : public PlayerStrategy {
 public:
     int selectPit(Board* board, Player* player) override {
